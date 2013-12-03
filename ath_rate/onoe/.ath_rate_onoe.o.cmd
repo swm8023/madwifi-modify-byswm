@@ -1,1 +1,0 @@
-cmd_/mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.o := ld -m elf_i386      -r -o /mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.o /mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/onoe.o 

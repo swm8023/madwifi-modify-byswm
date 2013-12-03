@@ -132,8 +132,9 @@ clean:
 		$(MAKE) -C $$i clean; \
 	done
 	-$(MAKE) -C $(TOOLS) clean
-	rm -rf .tmp_versions
+	rm -rf .tmp_versions 
 	rm -f modules.order *.symvers Module.markers svnversion.h
+	find  .  -name  '*.ko.unsigned*'  -type  f  -print  -exec  rm  -rf  {} \; 
 
 .PHONY: info
 info:

@@ -1,1 +1,0 @@
-cmd_/mnt/winE/sharecent/madwifi-trunk/net80211/wlan_ccmp.o := ld -m elf_i386     -r -o /mnt/winE/sharecent/madwifi-trunk/net80211/wlan_ccmp.o /mnt/winE/sharecent/madwifi-trunk/net80211/ieee80211_crypto_ccmp.o 

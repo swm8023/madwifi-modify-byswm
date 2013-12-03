@@ -1,8 +1,0 @@
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_wep.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_tkip.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_ccmp.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_acl.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_xauth.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_scan_sta.ko
-kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_scan_ap.ko
