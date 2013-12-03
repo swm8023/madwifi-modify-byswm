@@ -1,0 +1,1 @@
+cmd_/mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.ko := ld -r -m elf_i386  -T /usr/src/linux-headers-3.8.0-33-generic/scripts/module-common.lds --build-id  -o /mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.ko /mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.o /mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.mod.o

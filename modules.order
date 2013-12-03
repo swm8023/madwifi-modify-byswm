@@ -1,0 +1,14 @@
+kernel//mnt/winE/sharecent/madwifi-trunk/ath/ath_pci.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_hal/ath_hal.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/amrr/ath_rate_amrr.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/sample/ath_rate_sample.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/minstrel/ath_rate_minstrel.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_wep.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_tkip.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_ccmp.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_acl.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_xauth.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_scan_sta.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/net80211/wlan_scan_ap.ko

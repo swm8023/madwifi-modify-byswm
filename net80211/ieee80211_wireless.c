@@ -66,6 +66,15 @@
 #include <net80211/ieee80211_linux.h>
 #include "ah.h"
 
+//byswm
+#define SWMDEBUG
+#ifdef SWMDEBUG
+#define SPRINTK(fmt, ...) printk(fmt, ## __VA_ARGS__)
+#else
+#define SPRINTK(fmt, ...)
+#endif
+
+
 #define	IS_UP(_dev) \
 	(((_dev)->flags & (IFF_RUNNING|IFF_UP)) == (IFF_RUNNING|IFF_UP))
 #define	IS_UP_AUTO(_vap) \
@@ -186,7 +195,6 @@ getiwkeyix(struct ieee80211vap *vap, const struct iw_point *erq, ieee80211_keyix
 	} else
 		return -EINVAL;
 }
-
 static int
 ieee80211_ioctl_siwencode(struct net_device *dev,
 	struct iw_request_info *info, struct iw_point *erq, char *keybuf)
@@ -5271,20 +5279,48 @@ ieee80211_ioctl_switch(struct net_device *dev,
 	
 	/* now flag the beacon update to include the channel switch IE */
 	if (!(ic->ic_flags & IEEE80211_F_DOTH)) {
-		printk("IEEE80211_F_BOTH not supported\n");
+		SPRINTK("IEEE80211_F_BOTH not supported\n");
 		return 0;
 	}
 	
 	c = ieee80211_doth_findchan(vap, channel);
 	if ((c != NULL) && (c != IEEE80211_CHAN_ANYC)) {
 		for (i = 0; i < IEEE80211_ADDR_LEN; i++)
-			printk("%d ", mac[i]);
-		printk(" == channel switch to %d\n", channel);
+			SPRINTK("%d ", mac[i]);
+		SPRINTK(" == channel switch to %d\n", channel);
 		ieee80211_send_csa_frame_tomac(vap,
 			IEEE80211_CSA_CAN_STOP_TX, c->ic_ieee, tbtt, mac);
 	} else {
 		return -EINVAL;
 	}
+	return 0;
+}
+
+//byswm
+static int
+ieee80211_ioctl_getnodes(struct net_device *dev,
+	struct iw_request_info *info, struct iw_point *wri, char *extra)
+{
+
+
+
+
+
+
+
+
+
+
+	SPRINTK("ioctl getnodes\n");
+	return 0;
+}
+
+//byswm
+static int
+ieee80211_ioctl_setnodes(struct net_device *dev,
+	struct iw_request_info *info, struct iw_point *wri, char *extra)
+{
+	SPRINTK("ioctl setnodes\n");
 	return 0;
 }
 
@@ -5304,6 +5340,11 @@ ieee80211_ioctl_switch(struct net_device *dev,
 	IW_PRIV_BLOB_TYPE_ENCODING(sizeof(struct ieee80211req_getset_appiebuf) + IEEE80211_APPIE_MAX)
 #define IW_PRIV_TYPE_FILTER 	\
 	IW_PRIV_BLOB_TYPE_ENCODING(sizeof(struct ieee80211req_set_filter))
+
+//byswm
+#define IW_PRIV_TYPE_NODELIST \
+	IW_PRIV_BLOB_TYPE_ENCODING(sizeof(struct ieee80211req_nodelistinfo))
+
 
 static const struct iw_priv_args ieee80211_priv_args[] = {
 	/* NB: setoptie & getoptie are !IW_PRIV_SIZE_FIXED */
@@ -5715,6 +5756,11 @@ static const struct iw_priv_args ieee80211_priv_args[] = {
 	 //byswm
 	{ IEEE80211_IOCTL_SWITCH,
 		IW_PRIV_TYPE_CHAR | 25, 0, "switch"},
+	{ IEEE80211_IOCTL_GETNODES,
+	  0, IW_PRIV_TYPE_NODELIST | IW_PRIV_SIZE_FIXED,"getnodelist" },
+	{ IEEE80211_IOCTL_SETNODES,
+	  IW_PRIV_TYPE_NODELIST | IW_PRIV_SIZE_FIXED, 0, "setnodelist" },
+	
 };
 
 #define set_handler(x,f) [x - SIOCIWFIRST] = (iw_handler) f
@@ -5800,6 +5846,8 @@ static const iw_handler ieee80211_priv_handlers[] = {
 	set_priv(IEEE80211_IOCTL_KICKMAC, ieee80211_ioctl_kickmac),
 	//byswm
 	set_priv(IEEE80211_IOCTL_SWITCH, ieee80211_ioctl_switch),
+	set_priv(IEEE80211_IOCTL_GETNODES, ieee80211_ioctl_getnodes),
+	set_priv(IEEE80211_IOCTL_SETNODES, ieee80211_ioctl_setnodes),
 };
 
 static struct iw_handler_def ieee80211_iw_handler_def = {

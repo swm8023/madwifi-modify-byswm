@@ -1,0 +1,4 @@
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/amrr/ath_rate_amrr.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/onoe/ath_rate_onoe.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/sample/ath_rate_sample.ko
+kernel//mnt/winE/sharecent/madwifi-trunk/ath_rate/minstrel/ath_rate_minstrel.ko

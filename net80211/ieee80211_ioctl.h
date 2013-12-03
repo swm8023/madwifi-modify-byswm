@@ -280,6 +280,16 @@ struct ieee80211req_chaninfo {
 	struct ieee80211_channel ic_chans[IEEE80211_CHAN_MAX];
 };
 
+//byswm
+#define IEEE80211_MAX_NODE 255
+struct ieee80211_nodeinfo {
+	u_int temp[100];
+};
+struct ieee80211req_nodelistinfo {
+	u_int ie_stas;
+	struct ieee80211_nodeinfo ie_nodes[IEEE80211_MAX_NODE];
+};
+
 /*
  * Retrieve the WPA/RSN information element for an associated station.
  */
@@ -556,7 +566,8 @@ struct ieee80211req_scan_result {
 
 //byswm
 #define IEEE80211_IOCTL_SWITCH 		(SIOCIWFIRSTPRIV+31)
-#define IEEE80211_IOCTL_GETNODES	(SIOCIWFIRSTPRIV+)
+#define IEEE80211_IOCTL_GETNODES	(SIOCIWFIRSTPRIV+29)
+#define IEEE80211_IOCTL_SETNODES	(SIOCIWFIRSTPRIV+27)
 
 enum {
 	IEEE80211_WMMPARAMS_CWMIN       = 1,

@@ -1,0 +1,1 @@
+cmd_/mnt/winE/sharecent/madwifi-trunk/ath_rate/minstrel/ath_rate_minstrel.o := ld -m elf_i386      -r -o /mnt/winE/sharecent/madwifi-trunk/ath_rate/minstrel/ath_rate_minstrel.o /mnt/winE/sharecent/madwifi-trunk/ath_rate/minstrel/minstrel.o 

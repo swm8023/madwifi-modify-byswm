@@ -1,0 +1,1 @@
+cmd_/mnt/winE/sharecent/madwifi-trunk/ath_rate/amrr/ath_rate_amrr.o := ld -m elf_i386      -r -o /mnt/winE/sharecent/madwifi-trunk/ath_rate/amrr/ath_rate_amrr.o /mnt/winE/sharecent/madwifi-trunk/ath_rate/amrr/amrr.o 

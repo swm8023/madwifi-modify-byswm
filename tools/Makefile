@@ -46,7 +46,7 @@ endif
 
 
 PROGRAMS = athstats 80211stats athkey athchans athctrl \
-	athdebug 80211debug wlanconfig wpakey swm_getsta
+	athdebug 80211debug wlanconfig wpakey swm_80211node
 
 SUBDIRS = ath_info
 
@@ -81,8 +81,8 @@ wlanconfig: wlanconfig.c
 wpakey: wpakey.c
 	$(CC) -o wpakey $(ALL_CFLAGS) $(LDFLAGS) wpakey.c
 
-swm_getsta: swm_getsta.c
-	$(CC) -o swm_getsta $(ALL_CFLAGS) $(LDFLAGS) swm_getsta.c
+swm_80211node: swm_80211node.c
+	$(CC) -o swm_80211node $(ALL_CFLAGS) $(LDFLAGS) swm_80211node.c
 
 install: all
 	install -d $(DESTDIR)$(BINDIR)
