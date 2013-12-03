@@ -556,6 +556,7 @@ struct ieee80211req_scan_result {
 
 //byswm
 #define IEEE80211_IOCTL_SWITCH 		(SIOCIWFIRSTPRIV+31)
+#define IEEE80211_IOCTL_GETNODES	(SIOCIWFIRSTPRIV+)
 
 enum {
 	IEEE80211_WMMPARAMS_CWMIN       = 1,

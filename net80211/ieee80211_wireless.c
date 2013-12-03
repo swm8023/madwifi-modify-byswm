@@ -5279,7 +5279,7 @@ ieee80211_ioctl_switch(struct net_device *dev,
 	if ((c != NULL) && (c != IEEE80211_CHAN_ANYC)) {
 		for (i = 0; i < IEEE80211_ADDR_LEN; i++)
 			printk("%d ", mac[i]);
-		printk(" == channel switch to %d", channel);
+		printk(" == channel switch to %d\n", channel);
 		ieee80211_send_csa_frame_tomac(vap,
 			IEEE80211_CSA_CAN_STOP_TX, c->ic_ieee, tbtt, mac);
 	} else {
