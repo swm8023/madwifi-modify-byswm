@@ -43,33 +43,39 @@ main(int argc, char *argv[])
 	} 
 	return 0;
 }
-
-static int 
-do80211priv(struct iwreq *iwr, const char *ifname, int op, void *data, size_t len) {
+static int devioctl(const char *ifname, int op, void *data, int len) {
+	struct iwreq iwr;
 	int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-	memset(iwr, 0, sizeof (struct iwreq));
-	strncpy(iwr->ifr_name, ifname, IFNAMSIZ);
+	memset(&iwr, 0, sizeof(iwr));
+	strncpy(iwr.ifr_name, ifname, sizeof(iwr.ifr_name));
+	
+	iwr.u.data.pointer = data;
+	//must less 65536
+	iwr.u.data.length = len;
 
-	iwr->u.data.pointer = data;
-	iwr->u.data.length = len;
-
-	if (ioctl(sockfd, op, iwr) < 0)
+	if (ioctl(sockfd, op, &iwr) < 0) {
+		perror("IOCTL ERROR: ");
 		return -1;
+	}
 	return 0;
 }
+
 
 static int
 get_list_nodes(const char *ifname)
 {
 	struct ieee80211req_nodelistinfo nodes;
-	struct iwreq iwr;
-	size_t len = sizeof (nodes);
-	if ((do80211priv(&iwr, ifname, IEEE80211_IOCTL_GETNODES, &nodes, len)) < 0)
+	int len = sizeof(struct ieee80211req_nodelistinfo);
+
+	memset(&nodes, 0, len);
+	nodes.ie_oper = IEEE80211_NODELIST_GET;
+	nodes.ie_stas = 4;
+	nodes.ie_bsta = nodes.ie_esta = -1;
 	
+	if (devioctl(ifname, IEEE80211_IOCTL_NODELIST, &nodes, len) < 0)
 		return -1;
-	
 
-
+	printf("%d\n", nodes.ie_stas);
 	return 0;
 }

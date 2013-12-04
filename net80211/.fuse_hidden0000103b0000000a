@@ -5297,40 +5297,6 @@ ieee80211_ioctl_switch(struct net_device *dev,
 }
 
 //byswm
-static int
-ieee80211_ioctl_nodelistoper(struct net_device *dev, struct iwreq *iwr) {
-	struct ieee80211req_nodelistinfo *nodes;
-	int len = sizeof(struct ieee80211req_nodelistinfo);
-	int error = 0;
-
-	if (!(nodes = kmalloc(len, GFP_KERNEL)))
-		return -ENOMEM;
-	error = copy_from_user(nodes, iwr->u.data.pointer, len);
-	
-	SPRINTK("NODE_DATA_LENTH %d\n", iwr->u.data.length);
-
-	switch (nodes->ie_oper) {
-		case IEEE80211_NODELIST_STAS:
-	
-			break;
-		case IEEE80211_NODELIST_GET:
-	
-			break;
-		case IEEE80211_NODELIST_SET:
-	
-			break;
-		default:
-			return -EFAULT;
-	}
-	error = copy_to_user(iwr->u.data.pointer, nodes, len);
-	kfree(nodes);
-	//SPRINTK("ieee80211_ioctl_nodelistoper\n");
-	return error ? -EFAULT : 0;
-}
-
-
-
-//byswm
 /*
 static int
 ieee80211_ioctl_getnodes(struct net_device *dev,
@@ -5955,9 +5921,6 @@ ieee80211_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		return ieee80211_ioctl_getstainfo(dev, (struct iwreq *)ifr);
 	case IEEE80211_IOCTL_SCAN_RESULTS:
 		return ieee80211_ioctl_getscanresults(dev, (struct iwreq *)ifr);
-	//byswm
-	case IEEE80211_IOCTL_NODELIST:
-		return ieee80211_ioctl_nodelistoper(dev, (struct iwreq *)ifr);
 	}
 	return -EOPNOTSUPP;
 }

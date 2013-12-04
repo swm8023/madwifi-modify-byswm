@@ -281,13 +281,20 @@ struct ieee80211req_chaninfo {
 };
 
 //byswm
-#define IEEE80211_MAX_NODE 255
+//must less 65536
+#define IEEE80211_MAX_NODEINFO 10
 struct ieee80211_nodeinfo {
-	u_int temp[100];
+	u_int temp[1000];
 };
 struct ieee80211req_nodelistinfo {
-	u_int ie_stas;
-	struct ieee80211_nodeinfo ie_nodes[IEEE80211_MAX_NODE];
+#define IEEE80211_NODELIST_STAS 0
+#define IEEE80211_NODELIST_GET 1
+#define IEEE80211_NODELIST_SET 2
+	int ie_oper;
+	int ie_stas;	//total stations
+	int ie_bsta;	//begin sta no.
+	int ie_esta;	//end sta no.
+	struct ieee80211_nodeinfo ie_nodes[IEEE80211_MAX_NODEINFO];
 };
 
 /*
@@ -566,8 +573,8 @@ struct ieee80211req_scan_result {
 
 //byswm
 #define IEEE80211_IOCTL_SWITCH 		(SIOCIWFIRSTPRIV+31)
-#define IEEE80211_IOCTL_GETNODES	(SIOCIWFIRSTPRIV+29)
-#define IEEE80211_IOCTL_SETNODES	(SIOCIWFIRSTPRIV+27)
+//#define IEEE80211_IOCTL_GETNODES	(SIOCIWFIRSTPRIV+29)
+//#define IEEE80211_IOCTL_SETNODES	(SIOCIWFIRSTPRIV+27)
 
 enum {
 	IEEE80211_WMMPARAMS_CWMIN       = 1,
@@ -672,6 +679,9 @@ enum {
 #define	SIOC80211IFCREATE		(SIOCDEVPRIVATE+7)
 #define	SIOC80211IFDESTROY	 	(SIOCDEVPRIVATE+8)
 #define	IEEE80211_IOCTL_SCAN_RESULTS	(SIOCDEVPRIVATE+9)
+
+//swm
+#define IEEE80211_IOCTL_NODELIST (SIOCDEVPRIVATE+10)
 
 struct ieee80211_clone_params {
 	char icp_name[IFNAMSIZ];		/* device name */
