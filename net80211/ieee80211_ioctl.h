@@ -279,22 +279,22 @@ struct ieee80211req_chaninfo {
 	u_int ic_nchans;
 	struct ieee80211_channel ic_chans[IEEE80211_CHAN_MAX];
 };
-
 //byswm
-//must less 65536
-#define IEEE80211_MAX_NODEINFO 10
+#define IEEE80211_MAX_NODEINFO 128 
+//AID_DEF default 128
 struct ieee80211_nodeinfo {
-	u_int temp[1000];
+	u_int8_t ni_authmode;
+	u_int16_t ni_flags;
+	u_int8_t ni_ath_flags;
+	u_int8_t ni_macaddr[IEEE80211_ADDR_LEN];
+	u_int8_t ni_bssid[IEEE80211_ADDR_LEN];
+	u_int8_t temp[100];
 };
-struct ieee80211req_nodelistinfo {
-#define IEEE80211_NODELIST_STAS 0
-#define IEEE80211_NODELIST_GET 1
-#define IEEE80211_NODELIST_SET 2
-	int ie_oper;
-	int ie_stas;	//total stations
-	int ie_bsta;	//begin sta no.
-	int ie_esta;	//end sta no.
-	struct ieee80211_nodeinfo ie_nodes[IEEE80211_MAX_NODEINFO];
+struct ieee80211req_nodelistoper {
+	#define IEEE80211_NODELIST_ADD 0
+	#define IEEE80211_NODELIST_DEL 1
+	u_int8_t node_oper;
+	struct ieee80211_nodeinfo node;
 };
 
 /*
@@ -681,7 +681,8 @@ enum {
 #define	IEEE80211_IOCTL_SCAN_RESULTS	(SIOCDEVPRIVATE+9)
 
 //swm
-#define IEEE80211_IOCTL_NODELIST (SIOCDEVPRIVATE+10)
+#define IEEE80211_IOCTL_GETNODELISTINFO (SIOCDEVPRIVATE+10)
+#define IEEE80211_IOCTL_NODELISTOPER (SIOCDEVPRIVATE+11)
 
 struct ieee80211_clone_params {
 	char icp_name[IFNAMSIZ];		/* device name */

@@ -332,3 +332,8 @@ u_int8_t ieee80211_getrssi(struct ieee80211com *);
 int32_t ieee80211_get_node_count(struct ieee80211com *);
 #endif /* _NET80211_IEEE80211_NODE_H_ */
 
+
+
+//byswm
+int ieee80211_add_node(struct ieee80211vap *vap,struct ieee80211_nodeinfo *node
+	);

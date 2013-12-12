@@ -988,6 +988,7 @@ ieee80211_alloc_node_table(struct ieee80211vap *vap,
 	struct ieee80211_node_table *nt = &ic->ic_sta;
 	struct ieee80211_node *ni;
 
+	//printk("ieee80211_alloc_node_table\n");
 	ni = ieee80211_alloc_node(vap, macaddr);
 	if (ni != NULL) {
 		ni->ni_inact = ni->ni_inact_reload = nt->nt_inact_init;
@@ -1019,6 +1020,7 @@ ieee80211_alloc_node(struct ieee80211vap *vap, const u_int8_t *macaddr)
 	struct ieee80211com *ic = vap->iv_ic;
 	struct ieee80211_node *ni;
 
+	//printk("ieee80211_alloc_node\n");
 	/* This always allocates zeroed memoery */
 	ni = ic->ic_node_alloc(vap);
 	if (ni != NULL) {
@@ -1159,6 +1161,7 @@ ieee80211_dup_bss(struct ieee80211vap *vap, const u_int8_t *macaddr,
 {
 	struct ieee80211_node *ni;
 
+	//printk("ieee80211_dup_bss %d %p\n", tmp, vap);
 	/* FIXME: Hack */
 	if (tmp) {
 		ni = ieee80211_alloc_node(vap, macaddr);
@@ -2195,3 +2198,19 @@ ieee80211_unref_node(struct ieee80211_node **pni)
 	*pni = NULL;
 }
 EXPORT_SYMBOL(ieee80211_unref_node);
+
+
+//byswm
+int ieee80211_add_node(struct ieee80211vap *vap,struct ieee80211_nodeinfo *node) {
+
+	struct ieee80211_node *ni;
+	ni = ieee80211_dup_bss(vap, node->ni_macaddr, 0);
+	if (ni != NULL) {
+		printk("alloc complete\n");
+	}
+	ni->ni_authmode = node->ni_authmode;
+	ieee80211_node_join(ni, -1);
+	return 0;	
+}
+
+

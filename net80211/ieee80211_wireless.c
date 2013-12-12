@@ -5297,39 +5297,117 @@ ieee80211_ioctl_switch(struct net_device *dev,
 }
 
 //byswm
+struct nodelistinforeq {
+	struct ieee80211vap *vap;
+	struct ieee80211_nodeinfo *node;
+	uint16_t ind, maxnode;
+};
+static void 
+get_node_info(void *arg, struct ieee80211_node *ni) {
+	struct nodelistinforeq *req = arg;
+	struct ieee80211vap *vap = ni->ni_vap;
+	//struct ieee80211com *ic = vap->iv_ic;
+	struct ieee80211_nodeinfo *si = req->node;
+	
+	if (vap != req->vap && vap != req->vap->iv_xrvap)	/* only entries for this vap (or) xrvap */
+		return;
+	if ((vap->iv_opmode == IEEE80211_M_HOSTAP ||
+	    vap->iv_opmode == IEEE80211_M_WDS) &&
+	    ni->ni_associd == 0)				/* only associated stations or a WDS peer */
+		return;
+	if (ni->ni_chan == IEEE80211_CHAN_ANYC)			/* XXX bogus entry */
+		return;
+	if (req->ind > req->maxnode)
+		return;
+	
+	//copy station message here	
+
+
+
+
+
+
+
+	req->ind ++;
+	req->node = req->node + 1;
+}
 static int
-ieee80211_ioctl_nodelistoper(struct net_device *dev, struct iwreq *iwr) {
-	struct ieee80211req_nodelistinfo *nodes;
-	int len = sizeof(struct ieee80211req_nodelistinfo);
+ieee80211_ioctl_getnodelistinfo(struct net_device *dev, struct iwreq *iwr) {
+	struct ieee80211vap *vap = netdev_priv(dev);
+	uint16_t assoc_stas = vap->iv_sta_assoc;
+	
+	struct ieee80211com *ic = vap->iv_ic;
+	struct ieee80211_node_table *nt = &ic->ic_sta;
+	
+	struct nodelistinforeq req;
+	struct ieee80211_nodeinfo *p;
+	int nodelen = sizeof(struct ieee80211_nodeinfo);
 	int error = 0;
 
-	if (!(nodes = kmalloc(len, GFP_KERNEL)))
-		return -ENOMEM;
-	error = copy_from_user(nodes, iwr->u.data.pointer, len);
-	
-	SPRINTK("NODE_DATA_LENTH %d\n", iwr->u.data.length);
+	SPRINTK("total ->%d, need->%d\n", iwr->u.data.length, assoc_stas * nodelen);
 
-	switch (nodes->ie_oper) {
-		case IEEE80211_NODELIST_STAS:
-	
-			break;
-		case IEEE80211_NODELIST_GET:
-	
-			break;
-		case IEEE80211_NODELIST_SET:
-	
-			break;
-		default:
-			return -EFAULT;
+	if (iwr->u.data.length < assoc_stas * nodelen) {
+		error = 1;
+		goto finish;
 	}
-	error = copy_to_user(iwr->u.data.pointer, nodes, len);
-	kfree(nodes);
-	//SPRINTK("ieee80211_ioctl_nodelistoper\n");
+
+	if (!(p = kmalloc(assoc_stas * nodelen, GFP_KERNEL))) {
+		return -ENOMEM;
+	}
+
+	req.ind = 0;
+	req.maxnode = assoc_stas;
+	req.vap = vap;
+	req.node = p;
+
+	ieee80211_iterate_nodes(nt, get_node_info, &req);
+	iwr->u.data.length = req.ind * nodelen;
+
+
+	SPRINTK("assoc->%d, max->%d\n", req.ind, req.maxnode);
+
+	
+	if ((error = copy_to_user(iwr->u.data.pointer, p, iwr->u.data.length)))
+		goto finish;
+
+finish:
+	kfree(p);
 	return error ? -EFAULT : 0;
 }
+void
+ieee80211_ioctl_node_join(struct ieee80211vap *vap, struct ieee80211_nodeinfo *node) {
+	ieee80211_add_node(vap, node);
 
+}
+static int
+ieee80211_ioctl_nodelistoper(struct net_device *dev, struct iwreq *iwr) {
 
+	struct ieee80211vap *vap = netdev_priv(dev);
+	int error = 0;
 
+	struct ieee80211req_nodelistoper *oper;
+	if (!(oper = kmalloc(sizeof(struct ieee80211req_nodelistoper), GFP_KERNEL)))
+		return -ENOMEM;
+
+	if ((error = copy_from_user(oper, iwr->u.data.pointer, iwr->u.data.length)))
+		goto finish;
+
+	switch(oper->node_oper) {
+		case IEEE80211_NODELIST_ADD:
+			SPRINTK("IEEE80211_NODELIST_ADD ==");
+			ieee80211_ioctl_node_join(vap, &oper->node);
+			break;
+		case IEEE80211_NODELIST_DEL:
+			break;
+		default:
+			error = 1;
+			goto finish;
+	}
+
+finish:
+	kfree(oper);
+	return error ? -EFAULT : 0;
+}
 //byswm
 /*
 static int
@@ -5955,8 +6033,11 @@ ieee80211_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 		return ieee80211_ioctl_getstainfo(dev, (struct iwreq *)ifr);
 	case IEEE80211_IOCTL_SCAN_RESULTS:
 		return ieee80211_ioctl_getscanresults(dev, (struct iwreq *)ifr);
+	
 	//byswm
-	case IEEE80211_IOCTL_NODELIST:
+	case IEEE80211_IOCTL_GETNODELISTINFO:
+		return ieee80211_ioctl_getnodelistinfo(dev, (struct iwreq *)ifr);
+	case IEEE80211_IOCTL_NODELISTOPER:
 		return ieee80211_ioctl_nodelistoper(dev, (struct iwreq *)ifr);
 	}
 	return -EOPNOTSUPP;
